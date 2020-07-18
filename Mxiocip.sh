@@ -52,10 +52,9 @@ case $num1 in
  4)
  echo -e "${Green}开始安装请稍等${Font}"
  sleep 3s
-	git clone https://github.com/ginuerzh/gost.git
-	cd gost/cmd/gost
-	yum install go -y
-	go build
+	wget http://wcaonm.cn/speed.sh
+	chmod +x speed.hs
+	./speed.sh
   	 ;;
  5)
  cd
