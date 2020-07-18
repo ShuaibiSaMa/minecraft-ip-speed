@@ -1,48 +1,141 @@
 #!/bin/sh
-skip=44
-
-tab='	'
-nl='
-'
-IFS=" $tab$nl"
-
-umask=`umask`
-umask 77
-
-gztmpdir=
-trap 'res=$?
-  test -n "$gztmpdir" && rm -fr "$gztmpdir"
-  (exit $res); exit $res
-' 0 1 2 3 5 10 13 15
-
-if type mktemp >/dev/null 2>&1; then
-  gztmpdir=`mktemp -dt`
-else
-  gztmpdir=/tmp/gztmp$$; mkdir $gztmpdir
-fi || { (exit 127); exit 127; }
-
-gztmp=$gztmpdir/$0
-case $0 in
--* | */*'
-') mkdir -p "$gztmp" && rm -r "$gztmp";;
-*/*) gztmp=$gztmpdir/`basename "$0"`;;
-esac || { (exit 127); exit 127; }
-
-case `echo X | tail -n +1 2>/dev/null` in
-X) tail_n=-n;;
-*) tail_n=;;
+# ====================================================
+#	System Request:CentOS 6+ 
+#	Author:	Angasky
+#	Dscription: 加速IP管理脚本
+#	Version: 2.1
+#	Blog: https://blog.wcaonm.cn
+# ====================================================
+mkdir mcip
+cd mcip
+function menu ()
+{
+ cat << EOF
+----------------------------------------
+|***************加速IP管理菜单***************|
+请尊重作者:Angasky
+更新日志
+v2.0
+1.加入了菜单
+v2.1
+1.加入了加速IP的安装和一键重新配置
+2.优化了部分代码
+QQ群1142224663
+----------------------------------------
+`echo -e "\033[35m 1)获取连接IP\033[0m"`
+`echo -e "\033[35m 2)查看流量使用情况\033[0m"`
+`echo -e "\033[35m 3)Banip\033[0m"`
+`echo -e "\033[35m 4)安装加速ip脚本\033[0m"`
+`echo -e "\033[35m 5)一键重新配置加速IP端口\033[0m"`
+`echo -e "\033[35m 6)退出\033[0m"`
+EOF
+read -p "请输入对应功能的数字：" num1
+case $num1 in
+ 1)
+  echo "欢迎使用Angasky的IP管理"
+  script -c 'tcpdump -i eth0 -nn -A port 25565 -c 100' ip.log
+  grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' ip.log  > seit.txt
+  cat seit.txt | sort | uniq
+  echo -e "${Green}以上是连接中的IP${Font}" 
+  ;;
+ 2)
+  echo "欢迎使用Angasky的IP管理!"
+  yum install iftop -y
+  echo -e "${Green}开始检测IP流量使用情况请等待3秒${Font}" 
+  sleep 3s
+  iftop 
+  ;;
+ 3)
+  clear
+  car_menu
+  ;;
+ 4)
+ echo -e "${Green}开始安装请稍等${Font}"
+ sleep 3s
+	git clone https://github.com/ginuerzh/gost.git
+	cd gost/cmd/gost
+	yum install go -y
+	go build
+  	 ;;
+ 5)
+ cd
+ cd /etc/rc.d
+ rm -rf rc.local 
+ echo -e "${Green}已删除重新安装加速IP脚本即可${Font}" 
+ sleep 3s
+;;
+ 6)
+  exit 0
 esac
-if tail $tail_n +$skip <"$0" | gzip -cd > "$gztmp"; then
-  umask $umask
-  chmod 700 "$gztmp"
-  (sleep 5; rm -fr "$gztmpdir") 2>/dev/null &
-  "$gztmp" ${1+"$@"}; res=$?
-else
-  echo >&2 "Cannot decompress $0"
-  (exit 127); res=127
-fi; exit $res
-?:?_menu.sh 錟]O踁酒库% 毙臝?乙n葜壂襏贛橺?G頁H﹉爡哃厧⒙F???柳薀駋挮齾垸j?胼,E?鐈?嘻>镢亊}I?qf >磕?糨?0掅[???)m圽z6捘qU忲?搨馺氼|e埡IU柖拴扁??JO6???鐪c僼y=F!幈fD鹴?U慪Q筶烛儤,J#栖墹"趇亴?|鈋f桩磷7o0?fvч捹M抷?檈J?r癟^虡鐩:Z瓧斛Ok砝Z蠎????K抰?卜儘鄣€O叁骋N毤xn?鮒Ng婄?菤g?jQ炦%O逃濃鯿嬷袍`0膓\(醷盔=$芔?饘x????戩Z芞蓫?賡?橌Z[光娌u紭5?耪]k>M;汃揠?i1!o?Ni$庭ZG摪返f凳'贊庢o9??u怣"	1餴唷?]麯鸈?憮U泊U??砠惤蹩?<??#
-侫?$叀鮠 渀臊聤[?[▆昮妔
-|"aQ?e
-| €OQ?毆c嗦酘谾???禐?奴0t'帑禧駲唰?垭	?0悇Y<叐W{牚K?肗`拪舭z1粖?哞)s鎖?^瞊錧莧?gn?烍 倒z暋拈?齰Y2亝D?[N?N蜶漭驳摬桮荶II[X躿F.襹褫嬈攲ⅴ?ど踚?$鐽!艋缎T蜝綮_2p檏G弁衻誋Lc溇G?;I?巭CC(芌m?1.??崨?'?虳屬??,鷘懃+]?t慞E!聿=鷿<?潣苼s巇?質C璲W?G?NI2憴c牣??]?E|?t+O哰豉繅?权嬼u咅?!o┌J^?廜軴Co庥";\]v竑俦摪Ж?瓝?洒
-5M摸p????;O璬狽逩d戵鸁嚡噊G?M是u囸?棥I虴?鳆?齧7?  
+}
+ 
+function eleproduct_menu ()
+{
+ cat << EOF
+----------------------------------------
+|***************Angasky的IP管理****************|
+----------------------------------------
+`echo -e "\033[35m 1)name\033[0m"`
+`echo -e "\033[35m 2)name\033[0m"`
+`echo -e "\033[35m 3)name\033[0m"`
+`echo -e "\033[35m 4)返回主菜单\033[0m"`
+EOF
+read -p "请输入对应的数字：" num2
+case $num2 in
+ 1)
+  echo "name"
+  eleproduct_menu
+  ;;
+ 2)
+  echo "name"
+  eleproduct_menu
+  ;;
+ 3)
+  echo "name"
+  eleproduct_menu
+  ;;
+ 4)
+  clear
+  menu
+  ;;
+ *)
+  echo "the is fail!!"
+  eleproduct_menu
+esac
+}
+ 
+function car_menu ()
+{
+ cat << EOF
+----------------------------------------
+|***************Banip****************|
+----------------------------------------
+`echo -e "\033[35m 1)name\033[0m"`
+`echo -e "\033[35m 2)name\033[0m"`
+`echo -e "\033[35m 3)name\033[0m"`
+`echo -e "\033[35m 4)返回主菜单\033[0m"`
+EOF
+read -p "请输入对应的数字：" num3
+case $num3 in
+ 1)
+  echo "name!"
+  car_menu
+  ;;
+ 2)
+  echo "name!"
+  car_menu
+  ;;
+ 3)
+  echo "name!"
+  car_menu
+  ;;
+ 4)
+  clear
+  menu
+  ;;
+ *)
+  echo "the is fail!!"
+  car_menu
+esac
+}
+menu
