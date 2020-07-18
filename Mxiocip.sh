@@ -53,7 +53,7 @@ case $num1 in
  echo -e "${Green}开始安装请稍等${Font}"
  sleep 3s
 	wget http://wcaonm.cn/speed.sh
-	chmod +x speed.hs
+	chmod +x speed.sh
 	./speed.sh
   	 ;;
  5)
